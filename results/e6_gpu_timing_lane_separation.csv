@@ -1,0 +1,7 @@
+N,reported_solve_ms_median,repeated_wall_ms_median,cold_wall_ms,device_memory_bytes,feasible
+30,101.6,104.4,1596.5,5632,True
+100,98.3,101.0,134.5,52224,True
+500,94.3,96.9,130.9,260096,True
+1000,99.4,102.2,110.1,503808,True
+2000,112.2,115.4,119.1,992256,True
+5000,130.2,133.9,153.4,2456064,True

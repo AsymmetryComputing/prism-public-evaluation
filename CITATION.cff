@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use these artifacts, please cite the paper."
+title: "PRISM public evaluation artifacts"
+authors:
+  - family-names: Ghosh
+    given-names: Debdoot
+    affiliation: Asymmetry Computing
+date-released: 2026-06-11
+version: 1.0.0
+preferred-citation:
+  type: article
+  title: "PRISM: A CPU/GPU Portfolio Optimization Engine for Deadline-Bounded Institutional Rebalancing"
+  authors:
+    - family-names: Ghosh
+      given-names: Debdoot
+  year: 2026

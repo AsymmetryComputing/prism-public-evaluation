@@ -1,0 +1,350 @@
+%% ============================================================
+%% asymmetry.sty
+%% Asymmetry Computing - arXiv preprint style
+%% Version 3.0  |  June 2026  |  "Modern systems" edition
+%%
+%% Design thesis: modern systems/HPC-finance benchmark paper.
+%% Compact typography, rounded evidence cards, booktabs tables,
+%% restrained navy/slate/teal/electric-blue/violet/amber palette,
+%% reduced page furniture. pdflatex + TeX Live 2023+.
+%% ============================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{asymmetry}[2026/06/11 v3.0 Asymmetry Computing modern systems preprint style]
+
+%% -- Encoding -------------------------------------------------
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+
+%% -- Body font: newpx Palatino (arXiv safe) -------------------
+\RequirePackage[osf]{newpxtext}
+\RequirePackage{amsmath}
+\RequirePackage{amsthm}
+\let\Bbbk\relax
+\let\openbox\relax
+\RequirePackage[varbb,smallerops]{newpxmath}
+\let\Bbbk\relax
+\RequirePackage{amssymb}
+\linespread{1.08}
+\RequirePackage{microtype}
+
+%% -- Display font: Source Sans Pro ----------------------------
+\RequirePackage[sfdefault,semibold,lining,tabular,scale=0.94]{sourcesanspro}
+
+%% -- Icon font: FontAwesome 5 ---------------------------------
+\RequirePackage{fontawesome5}
+
+%% -- Letter-spacing utility -----------------------------------
+\RequirePackage{soul}
+
+%% -- Page geometry --------------------------------------------
+\RequirePackage[
+  a4paper,
+  top=2.2cm, bottom=2.2cm,
+  left=2.1cm, right=2.1cm,
+  headheight=14pt
+]{geometry}
+
+%% -- Core packages --------------------------------------------
+\RequirePackage{bm}
+\RequirePackage{booktabs,tabularx,multirow,array,colortbl,float,placeins}
+\RequirePackage{graphicx}
+\RequirePackage{setspace,enumitem}
+\RequirePackage{needspace}
+\RequirePackage[numbers,sort&compress]{natbib}
+\RequirePackage{etoolbox}
+
+%% Booktabs weights: classic, restrained
+\setlength{\heavyrulewidth}{0.75pt}
+\setlength{\lightrulewidth}{0.4pt}
+\setlength{\cmidrulewidth}{0.35pt}
+\setlength{\aboverulesep}{0.4ex}
+\setlength{\belowrulesep}{0.6ex}
+
+%% -- Colour palette: navy / slate / teal / electric / violet / amber
+\RequirePackage[dvipsnames,svgnames,table]{xcolor}
+\definecolor{ACnavy}{RGB}{23,42,84}      % deep navy
+\definecolor{ACslate}{RGB}{71,85,105}    % slate
+\definecolor{ACteal}{RGB}{15,118,110}    % teal
+\definecolor{ACblue}{RGB}{37,99,235}     % electric blue
+\definecolor{ACviolet}{RGB}{109,91,208}  % muted violet
+\definecolor{ACamber}{RGB}{180,83,9}     % amber warning
+\definecolor{ACfill}{RGB}{241,245,249}   % light slate fill
+\definecolor{ACcard}{RGB}{248,250,252}   % card background
+\definecolor{ACline}{RGB}{203,213,225}   % hairline
+
+%% Legacy aliases (compatibility with earlier sources)
+\colorlet{ACindigo}{ACnavy}
+\colorlet{ACgold}{ACamber}
+\colorlet{ACfog}{ACfill}
+\colorlet{ACmist}{ACcard}
+\colorlet{ACgray}{ACslate}
+\colorlet{ACliney}{ACline}
+\colorlet{ACink}{ACnavy}
+\colorlet{ACblood}{ACteal}
+\colorlet{ACsteel}{ACslate}
+\colorlet{ACash}{ACline}
+\colorlet{ACbone}{white}
+\colorlet{ACbrass}{ACamber}
+\colorlet{ACsmoke}{ACfill}
+
+%% -- TikZ -----------------------------------------------------
+\RequirePackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,backgrounds,calc}
+
+\tikzset{
+  acblock/.style = {
+    draw=ACslate!70, fill=ACfill,
+    rounded corners=2.5pt,
+    minimum width=24mm, minimum height=12mm,
+    align=center, line width=0.5pt, inner sep=3pt,
+    font=\small\sffamily
+  },
+  acrouter/.style = {
+    draw=ACblue!80, fill=ACblue!7,
+    rounded corners=2.5pt,
+    minimum width=22mm, minimum height=12mm,
+    align=center, line width=0.8pt, inner sep=3pt,
+    font=\small\sffamily\bfseries
+  },
+  acpath/.style = {
+    draw=ACslate!60, fill=ACcard,
+    rounded corners=2.5pt,
+    minimum width=30mm, minimum height=12mm,
+    align=center, line width=0.5pt, inner sep=3pt,
+    font=\small\sffamily
+  },
+  acaudit/.style = {
+    draw=ACamber!75, fill=ACamber!8,
+    rounded corners=2.5pt,
+    minimum width=22mm, minimum height=12mm,
+    align=center, line width=0.5pt, inner sep=3pt,
+    font=\small\sffamily
+  },
+  acarr/.style = {
+    -{Stealth[length=2.2mm,width=1.9mm]}, line width=0.6pt,
+    draw=ACslate!85, rounded corners=3pt
+  },
+  aclbl/.style = {
+    font=\scriptsize\sffamily,
+    text=ACslate, fill=white, inner sep=1.5pt
+  }
+}
+
+%% -- Caption styling ------------------------------------------
+\RequirePackage{caption,subcaption}
+\captionsetup{
+  font={footnotesize,stretch=1.04},
+  labelfont={bf,sf,color=ACnavy},
+  textfont=bf,
+  labelsep=period,
+  skip=5pt
+}
+
+%% -- tcolorbox: rounded evidence cards ------------------------
+\RequirePackage[most]{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+%% Main-result card
+\newtcolorbox{keyresult}[1][]{
+  enhanced, breakable,
+  colback=ACblue!5, colframe=ACblue!50,
+  boxrule=0.6pt, arc=3pt,
+  attach boxed title to top left={yshift=-2.1mm, xshift=6mm},
+  boxed title style={
+    colback=ACblue, colframe=ACblue,
+    boxrule=0pt, arc=2pt,
+    left=6pt, right=6pt, top=1.6pt, bottom=1.8pt
+  },
+  coltitle=white, fonttitle=\footnotesize\bfseries\sffamily,
+  title={Main result},
+  left=9pt, right=9pt, top=10pt, bottom=7pt,
+  #1
+}
+
+%% Claim-boundary card
+\newtcolorbox{cavetbox}[1][]{
+  enhanced, breakable,
+  colback=ACviolet!5, colframe=ACviolet!45,
+  boxrule=0.6pt, leftrule=2.4pt, arc=3pt,
+  left=10pt, right=9pt, top=7pt, bottom=7pt,
+  fonttitle=\footnotesize\bfseries\sffamily, coltitle=ACviolet,
+  #1
+}
+
+%% Warning / caveat note (amber)
+\newtcolorbox{warnnote}[1][]{
+  enhanced, breakable,
+  colback=ACamber!6, colframe=ACamber!55,
+  boxrule=0.6pt, leftrule=2.4pt, arc=3pt,
+  left=10pt, right=9pt, top=6pt, bottom=6pt,
+  fonttitle=\footnotesize\bfseries\sffamily, coltitle=ACamber,
+  #1
+}
+
+%% Artifact / reproducibility card (teal)
+\newtcolorbox{reprobox}[1][]{
+  enhanced, breakable,
+  colback=ACteal!5, colframe=ACteal!50,
+  boxrule=0.6pt, arc=3pt,
+  attach boxed title to top left={yshift=-2.1mm, xshift=6mm},
+  boxed title style={
+    colback=ACteal, colframe=ACteal,
+    boxrule=0pt, arc=2pt,
+    left=6pt, right=6pt, top=1.6pt, bottom=1.8pt
+  },
+  coltitle=white, fonttitle=\footnotesize\bfseries\sffamily,
+  left=8pt, right=8pt, top=9pt, bottom=6pt,
+  #1
+}
+
+%% Abstract card: rounded, quiet
+\newtcolorbox{abstractbox}[1][]{
+  enhanced,
+  colback=ACcard, colframe=ACline,
+  boxrule=0.6pt, arc=3.5pt,
+  left=11pt, right=11pt, top=8pt, bottom=8pt,
+  before skip=4pt, after skip=6pt,
+  before upper={\setlength{\parskip}{4pt}},
+  #1
+}
+
+%% -- Section heading styles: compact, mixed case --------------
+\RequirePackage{titlesec}
+\titleformat{\section}
+  {\fontsize{12.2}{14.8}\selectfont\sffamily\bfseries\color{ACnavy}}
+  {{\color{ACblue}\thesection}}{0.6em}{}
+  [\vspace{-3.6pt}{\color{ACline}\rule{\linewidth}{0.5pt}}]
+\titleformat{\subsection}
+  {\fontsize{10.6}{12.8}\selectfont\sffamily\bfseries\color{ACnavy!92}}
+  {{\color{ACblue}\thesubsection}}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalsize\sffamily\bfseries\color{ACslate}}
+  {{\color{ACblue}\thesubsubsection}}{0.6em}{}
+\titlespacing*{\section}{0pt}{11pt}{5pt}
+\titlespacing*{\subsection}{0pt}{8pt}{3pt}
+\titlespacing*{\subsubsection}{0pt}{6pt}{2pt}
+
+%% -- Running headers: minimal furniture -----------------------
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\sffamily\color{ACslate}PRISM: deadline-bounded portfolio optimization}
+\fancyhead[R]{\footnotesize\sffamily\color{ACslate}Ghosh, 2026}
+\fancyfoot[C]{\footnotesize\sffamily\color{ACslate}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{{\color{ACline}\hrule width\headwidth height 0.4pt}}
+
+%% First page: small logo mark only, no running head
+\fancypagestyle{firstpage}{%
+  \fancyhf{}%
+  \fancyhead[L]{%
+  \smash{%
+    \raisebox{-6pt}{%
+      \includegraphics[height=17pt,keepaspectratio]{asymmetry_logo}%
+      \hspace{5pt}%
+      {\sffamily\fontsize{8.2}{8.2}\selectfont\color{ACslate}%
+       \textls[140]{ASYMMETRY COMPUTING}}%
+    }%
+  }%
+  }%
+  \fancyfoot[C]{\footnotesize\sffamily\color{ACslate}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\headrule}{}%
+}
+
+%% -- Hyperlinks -----------------------------------------------
+\RequirePackage[
+  colorlinks=true,
+  linkcolor=ACblue,
+  citecolor=ACteal,
+  urlcolor=ACteal,
+  breaklinks=true,
+  pdftitle={PRISM: A CPU/GPU Portfolio Optimization Engine for
+            Deadline-Bounded Institutional Rebalancing},
+  pdfauthor={Debdoot Ghosh},
+  pdfkeywords={portfolio optimization, GPU optimization, portfolio rebalancing,
+               deadline-bounded optimization, institutional finance}
+]{hyperref}
+
+%% -- Bibliography ---------------------------------------------
+\setlength{\bibsep}{2pt}
+\renewcommand{\bibfont}{\small}
+
+%% -- Spacing --------------------------------------------------
+\setlist{nosep, topsep=2pt, itemsep=2pt}
+\setlength{\parskip}{2.6pt}
+\setlength{\parindent}{1em}
+
+%% -- Table row macros -----------------------------------------
+%% Quiet booktabs headers: light fill, navy sans labels.
+\newcommand{\hdrrow}{\rowcolor{ACfill}}
+\newcommand{\hcell}[1]{{\leavevmode\sffamily\bfseries\color{ACnavy}#1}}
+\newcommand{\resrow}{\rowcolor{ACblue!5}}
+
+%% Status badges for result tables (legend in claim notes)
+\newcommand{\bfeas}{\,{\scriptsize\sffamily\bfseries\color{ACteal}feas}}
+\newcommand{\btimeout}{\,{\scriptsize\sffamily\bfseries\color{ACamber}t/o}}
+\newcommand{\blate}{\,{\scriptsize\sffamily\bfseries\color{ACviolet}late}}
+
+%% -- Title block macros ---------------------------------------
+%% \ACmaketitle{Main Title}{Subtitle}: standard arXiv-style centered
+%% title block (mixed case, bold serif, no decoration).
+\newcommand{\ACmaketitle}[2]{%
+  \begin{center}%
+    {\rmfamily\bfseries\fontsize{16.2}{20.5}\selectfont
+     \hyphenpenalty=10000\exhyphenpenalty=10000 #1\\[2pt] #2\par}%
+  \end{center}%
+  \vspace{2pt}%
+}
+
+%% Author line: centered name + affiliation + contact, arXiv convention
+\newcommand{\ACauthorline}{%
+  \begin{center}%
+    {\fontsize{11.6}{14.5}\selectfont\bfseries Debdoot Ghosh}\\[3pt]
+    {\small Asymmetry Computing}\\[5pt]
+    {\footnotesize\color{ACslate}\sffamily Email}\enspace
+    {\small\href{mailto:debdoot.ghosh23@alumni.imperial.ac.uk}{\texttt{debdoot.ghosh23@alumni.imperial.ac.uk}}}\\[2pt]
+    {\footnotesize\color{ACslate}\sffamily Web}\enspace
+    {\small\href{https://asymmetrycomputing.com/}{\texttt{asymmetrycomputing.com}}}\\[5pt]
+    {\small\itshape June 2026}%
+  \end{center}%
+  \vspace{4pt}%
+}
+
+%% -- Journal-style abstract ----------------------------------
+\renewenvironment{abstract}{%
+  \par\noindent
+  {\sffamily\bfseries\color{ACnavy}Abstract}\par
+  \vspace{2pt}%
+  \makebox[\linewidth][l]{\color{ACline}\rule{0.94\linewidth}{0.4pt}}\par
+  \vspace{3pt}%
+  \small
+}{%
+  \par\vspace{4pt}%
+}
+
+%% GitHub link: \ACgithublink{display text}{https://...}
+\newcommand{\ACgithublink}[2]{%
+  \noindent
+  {\small\faGithub\enspace\href{#2}{\texttt{#1}}}%
+}
+
+%% -- Theorem-like environments --------------------------------
+\newtheoremstyle{ACstyle}
+  {5pt}{5pt}{\itshape}{0pt}{\color{ACnavy}\bfseries}{.}{ }{}
+\theoremstyle{ACstyle}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+%% -- Paper-specific math macros -------------------------------
+\newcommand{\PRISM}{PRISM}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bmu}{\boldsymbol{\mu}}
+\newcommand{\bSigma}{\boldsymbol{\Sigma}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\oom}{\textsc{oom}}
+
+\endinput
+%% End asymmetry.sty

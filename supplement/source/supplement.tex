@@ -1,0 +1,227 @@
+%% ============================================================
+%% PRISM Paper 1: supplement
+%% Companion to paper.tex
+%% ============================================================
+\documentclass[10pt,a4paper]{extarticle}
+\usepackage{asymmetry}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\setlength{\tabcolsep}{5.2pt}
+\renewcommand{\arraystretch}{1.12}
+
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\newenvironment{claimnotes}
+  {\par\vspace{2.5pt}\begin{minipage}{\linewidth}\footnotesize
+   {\sffamily\bfseries\color{ACslate}Claim notes.}\enspace
+   \setlength{\parskip}{1pt}}
+  {\end{minipage}}
+
+\begin{document}
+\thispagestyle{firstpage}
+\vspace{2pt}
+
+\ACmaketitle%
+  {Supplement: PRISM CPU/GPU Portfolio Optimization}%
+  {Eligibility Ledger, Scale Frontier, and Workflow Sanity Checks}
+
+\ACauthorline
+
+\noindent
+This supplement accompanies \emph{PRISM: A CPU/GPU Portfolio Optimization
+Engine for Deadline-Bounded Institutional Rebalancing}. It records material
+that supports the main paper without being required for its central claims:
+the solver eligibility ledger, the CPU/GPU scale frontier, workflow sanity
+checks, and additional artifact details. All evidence-artifact names, timing
+lanes, status vocabulary, and claim rules are those defined in the main paper.
+
+\vspace{4pt}
+
+%% ============================================================
+\section{Solver Eligibility Ledger}
+\label{app:eligibility}
+%% ============================================================
+
+Table~\ref{tab:versions} records the full eligibility ledger for the evidence
+package, including installed packages that did not produce claim-bearing rows.
+Entries are operational eligibility records under the declared protocol, not
+solver critiques.
+
+\begin{table}[H]
+\centering
+\caption{Solver eligibility ledger for the recorded evidence package.}
+\label{tab:versions}
+\small
+\begin{tabularx}{0.97\linewidth}{l l Y}
+\toprule
+\hdrrow\hcell{Solver stack} & \hcell{Version} & \hcell{Eligibility} \\
+\midrule
+PRISM-CPU & evidence build \texttt{512758f} & claim-bearing where recorded \\
+PRISM-GPU & evidence build \texttt{512758f} & claim-bearing; \texttt{e6} rows are timing/status only \\
+OSQP & 1.1.0 & claim-bearing where recorded \\
+Clarabel & 0.11.1 & claim-bearing where recorded \\
+SCS & via CVXPY 1.8.1 & claim-bearing where recorded \\
+MOSEK & 11.1.11 & claim-bearing where recorded \\
+CVXPY interface & 1.8.1 & comparator modeling layer; backend named per row \\
+Commercial reference (anonymized) & recorded in evidence & objective-gap reference only; timings unpublished under license terms \\
+CPLEX & 22.1.2.0 & configured license did not support rows at $N{\geq}500$; completed public-small lane only; not eligible for claim-bearing comparisons \\
+HiGHS & 1.13.0 & public-small lane only; not a QP comparator in this package \\
+NVIDIA cuOpt & 26.2.0 & no versioned active run recorded; not benchmarked \\
+CVXPortfolio & not installed & not benchmarked \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%% ============================================================
+\section{Scale Frontier Figure and Discussion}
+\label{app:frontier}
+%% ============================================================
+
+Table~\ref{tab:frontier} and Figure~\ref{fig:gpu} record the full-call
+CPU/GPU scale frontier from evidence \texttt{e1\_multisolver\_public\_rows}
+and \texttt{e4\_deadline\_completion\_grid}. Full-call timing includes
+public-call setup, data movement, status handling, validation, and output
+materialization; the frontier is a systems-boundary measurement, not a
+device-throughput claim. The convergence of CPU and GPU wall-clock values at
+selected sizes is a public-call systems effect, not evidence about
+device-level equivalence.
+
+\begin{table}[H]
+\centering
+\caption{PRISM CPU/GPU scale frontier, full-call wall-clock, evidence
+\texttt{e1}/\texttt{e4}. Rows without completed reference solvers carry timing
+and feasibility status only.}
+\label{tab:frontier}
+\small
+\begin{tabularx}{0.97\linewidth}{r r r Y}
+\toprule
+\hdrrow\hcell{$N$} & \hcell{CPU full-call ms} & \hcell{GPU full-call ms} &
+\hcell{Reading (systems lane)} \\
+\midrule
+5{,}000 & 1{,}804.8 & \textbf{140.7} & GPU path is the fastest recorded PRISM path on this row. \\
+10{,}000 & 228.3 & \textbf{215.9} & Both PRISM paths complete inside 0.5\,s. \\
+25{,}000 & 1{,}063.6 & \textbf{458.3} & GPU path remains inside 1\,s. \\
+50{,}000 & 2{,}187.9 & \textbf{861.4} & GPU path remains inside the 5\,s deadline lane. \\
+100{,}004 & \textbf{2{,}157.8} & 2{,}161.2 & Public-call systems effect; see text. \\
+\bottomrule
+\end{tabularx}
+\begin{claimnotes}
+\texttt{e4} also records GPU memory below 100\,MB at $N{=}100{,}004$, treated
+as an externally observed memory-class result.
+\end{claimnotes}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/fig_scale_frontier.pdf}
+\caption{CPU/GPU scale frontier from Table~\ref{tab:frontier}, evidence
+\texttt{e1}/\texttt{e4}. Full-call timing includes public-call setup, data
+movement, status handling, validation, and output materialization; the figure
+is a systems-boundary measurement, not a device-throughput claim.}
+\label{fig:gpu}
+\end{figure}
+
+The deadline-completion grid in \texttt{e4} complements the frontier: it
+records, for each size and declared deadline from 0.1\,s to 300\,s, whether
+each PRISM path completed inside the window. PRISM-GPU completes the
+$N{=}10{,}000$ row inside 0.5\,s and the $N{=}100{,}004$ row inside 10\,s in
+that grid; both PRISM paths complete every recorded size at the 30\,s and
+300\,s deadlines.
+
+%% ============================================================
+\section{Walk-Forward and Monte Carlo Sanity Checks}
+\label{app:sanity}
+%% ============================================================
+
+These checks verify pipeline behavior on repeated portfolio outputs. They are
+workflow-correctness evidence under the main paper's claim contract and are
+not investment-performance evidence.
+
+\subsection{Walk-Forward Check}
+
+The walk-forward check in
+\texttt{e3\_external\_diagnostics\_and\_gap\_checks} covers 131 U.S.
+public-equity survivors from January 3, 2019 through December 31, 2025, with
+300 weekly rebalance points, 5\,bps transaction costs, and a 5\% position cap.
+PRISM-Regime reports Sharpe 0.901 with 95\% interval $[0.770, 1.033]$, Sortino
+1.144, and maximum drawdown $-36.4\%$. Equal-Weight reports the same Sharpe in
+this check; Min-Vol reports 0.923. Two disclosures bound the interpretation.
+First, the universe is survivorship-biased by construction and the
+rolling-mean return input is non-predictive; the study is a solver and
+workflow correctness check. Second, the tie with Equal-Weight is expected:
+under a non-informative return input, converging to broad diversification is
+the mathematically correct outcome.
+
+\subsection{Monte Carlo Check}
+
+The Monte Carlo study in \texttt{e3} evaluates 1{,}000 random universes of 20
+to 50 stocks. PRISM reports mean Sharpe 5.315 with positive Sharpe in 79.2\%
+of trials; Equal-Weight reports 3.974 and 75.1\%; Min-Vol reports 5.095 and
+84.0\%. PRISM beats Equal-Weight in 60.4\% of trials and Min-Vol in 54.1\%.
+Cross-trial dispersion is large (standard deviation above 6 Sharpe units),
+which is why these numbers support workflow stability rather than any
+performance ranking.
+
+%% ============================================================
+\section{Additional Artifact Details}
+\label{app:artifacts}
+%% ============================================================
+
+The public artifact repository
+(\texttt{AsymmetryComputing/prism-public-evaluation}) uses the following
+layout. PRISM implementation code is not part of the public artifact.
+
+\begin{table}[H]
+\centering
+\caption{Public artifact repository layout.}
+\label{tab:repo}
+\small
+\begin{tabularx}{0.95\linewidth}{l Y}
+\toprule
+\hdrrow\hcell{Path} & \hcell{Contents} \\
+\midrule
+\texttt{README.md}, \texttt{MANIFEST.yml}, \texttt{CITATION.cff}, \texttt{LICENSE} & Index, artifact manifest, citation metadata, license. \\
+\texttt{environment/} & Hardware/runtime disclosure and package versions. \\
+\texttt{data\_sanitized/} & Benchmark input manifest; no client data, no engine state. \\
+\texttt{results/} & One sanitized CSV per evidence artifact (\texttt{e1}--\texttt{e6}). \\
+\texttt{figures/} & Published figures (vector). \\
+\texttt{tables/} & Machine-readable copies of the published tables. \\
+\texttt{validation/} & Public residual and feasibility-gate scripts; table reproduction script. \\
+\texttt{evidence\_ledger/} & Claim-to-evidence ledger, artifact manifest, artifact policy. \\
+\texttt{paper/}, \texttt{supplement/} & arXiv version and sources. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Each claim-bearing number in the main paper maps to a row in
+\texttt{evidence\_ledger/claim\_to\_evidence\_ledger.md}, which records claim
+ID, claim text, section, table or figure, evidence artifact, allowed claim
+type, disallowed interpretation, and reproducibility level.
+
+%% ============================================================
+\section{Extra Tables and Claim Notes}
+\label{app:extra}
+%% ============================================================
+
+\textbf{Small-problem objective agreement
+(\texttt{e2\_small\_problem\_agreement}).} On a public FF30 small-problem
+study (five seeds, $N{=}30$), all completed comparators agree on the objective
+value to approximately seven significant figures, anchoring the
+objective-agreement methodology used for gap eligibility. PRISM timing rows
+are not recorded in \texttt{e2}; the artifact is comparator-agreement
+evidence only.
+
+\textbf{Status vocabulary.} The badges used in the main paper's tables
+abbreviate the declared status vocabulary: \emph{feas} (feasible /
+non-certified), \emph{t/o} (timeout at the declared ceiling), and \emph{late}
+(completed status after the operating window). ``No accepted feasible
+return'' records that no output passed the external feasibility gates before
+the deadline; it is not a certified infeasibility status.
+
+\textbf{Pending evidence.} A burden-specific PRISM-GPU rerun of the
+constraint-burden curve and a multi-seed rerun of the single-shot
+\texttt{e1} rows are recorded as planned evidence extensions.
+
+\end{document}

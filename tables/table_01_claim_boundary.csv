@@ -1,0 +1,5 @@
+evidence_condition,allowed_claim,disallowed_claim
+reference solver completed,"timing, feasibility, objective-gap comparison on same public objective",general dominance over all formulations or hardware
+reference solver did not complete,"deadline completion, feasibility checks, memory class, failure status",certified optimality or objective-gap superiority
+queue benchmark completed,"throughput, missed-deadline rate, p50/p99, total elapsed, audit coverage",investment-performance superiority or universal solver ranking
+backtest or Monte Carlo check,workflow validation on deployable outputs,"alpha, mandate suitability, live trading performance"

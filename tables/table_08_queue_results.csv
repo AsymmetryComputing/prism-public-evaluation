@@ -1,0 +1,4 @@
+solver,p50_ms,p99_ms,total_wall_s,completed,missed_deadline_pct
+PRISM-GPU,212.1,343.3,109.5,500/500,0.0
+PRISM-CPU,225.3,392.3,116.8,500/500,0.0
+OSQP,censored at cap,censored at cap,,4/500,99.2

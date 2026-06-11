@@ -1,0 +1,471 @@
+{
+ "evidence_id": "e7_hard_scenarios_real_data",
+ "generated_utc": "2026-06-11T12:26:39Z",
+ "data": {
+  "source": "yfinance daily adjusted close",
+  "membership": "current S&P 500 list (Wikipedia)",
+  "period": "2019-03-20 .. 2025-12-31",
+  "n_assets": 481,
+  "factor_model": "PCA k=20 on real returns"
+ },
+ "lanes": {
+  "incumbent": "cvxpy parametrized model; only prob.solve() timed (model construction excluded)",
+  "prism": "public solve() wall time; GPU host wall, one disclosed warm-up call excluded",
+  "objective": "public objective recomputed externally on every returned weight vector"
+ },
+ "budget_s4_ms": 500.0,
+ "scenario_defs": {
+  "S1": "tax-aware transition: gamma=0.005 L1 from drifted real holdings, cap 3%",
+  "S2": "account restrictions: tight 1.2% caps (exclusions as pre-solve universe filter)",
+  "S3": "factor+turnover control: gamma=0.010, return tilt 1.5x",
+  "S4": "deadline-bounded: 25 personalized accounts, declared 0.5 s budget",
+  "S5": "batch throughput: 200 personalized accounts, queue wall-clock",
+  "S6": "cvxportfolio single-period policy on identical real returns"
+ },
+ "single_solves": [
+  {
+   "scenario": "S1",
+   "solver": "OSQP",
+   "wall_ms": 69.2,
+   "status": "optimal",
+   "feasible": true,
+   "objective": -0.04187743222533299
+  },
+  {
+   "scenario": "S1",
+   "solver": "Clarabel",
+   "wall_ms": 39.33,
+   "status": "optimal",
+   "feasible": true,
+   "objective": -0.0418774333979773
+  },
+  {
+   "scenario": "S1",
+   "solver": "SCS",
+   "wall_ms": 54.59,
+   "status": "optimal",
+   "feasible": true,
+   "objective": -0.04187743255705324
+  },
+  {
+   "scenario": "S1",
+   "solver": "PRISM-CPU",
+   "wall_ms": 7.72,
+   "status": "converged",
+   "feasible": true,
+   "objective": -0.041877432225451657
+  },
+  {
+   "scenario": "S1",
+   "solver": "PRISM-GPU",
+   "wall_ms": 257.86,
+   "status": "converged",
+   "feasible": true,
+   "objective": -0.04187743222428591
+  },
+  {
+   "scenario": "S2",
+   "solver": "OSQP",
+   "wall_ms": 79.93,
+   "status": "optimal",
+   "feasible": true,
+   "objective": -0.02748755109840569
+  },
+  {
+   "scenario": "S2",
+   "solver": "Clarabel",
+   "wall_ms": 24.34,
+   "status": "optimal",
+   "feasible": true,
+   "objective": -0.027487551463659377
+  },
+  {
+   "scenario": "S2",
+   "solver": "SCS",
+   "wall_ms": 30.83,
+   "status": "optimal",
+   "feasible": true,
+   "objective": -0.02748755179431001
+  },
+  {
+   "scenario": "S2",
+   "solver": "PRISM-CPU",
+   "wall_ms": 7.1,
+   "status": "converged",
+   "feasible": true,
+   "objective": -0.027487551097647743
+  },
+  {
+   "scenario": "S2",
+   "solver": "PRISM-GPU",
+   "wall_ms": 258.22,
+   "status": "converged",
+   "feasible": true,
+   "objective": -0.02748755109871761
+  },
+  {
+   "scenario": "S3",
+   "solver": "OSQP",
+   "wall_ms": 73.39,
+   "status": "optimal",
+   "feasible": true,
+   "objective": -0.05762184973366233
+  },
+  {
+   "scenario": "S3",
+   "solver": "Clarabel",
+   "wall_ms": 26.57,
+   "status": "optimal",
+   "feasible": true,
+   "objective": -0.05762184977124565
+  },
+  {
+   "scenario": "S3",
+   "solver": "SCS",
+   "wall_ms": 31.49,
+   "status": "optimal",
+   "feasible": true,
+   "objective": -0.05762180095831425
+  },
+  {
+   "scenario": "S3",
+   "solver": "PRISM-CPU",
+   "wall_ms": 6.04,
+   "status": "converged",
+   "feasible": true,
+   "objective": -0.057621849733603514
+  },
+  {
+   "scenario": "S3",
+   "solver": "PRISM-GPU",
+   "wall_ms": 256.08,
+   "status": "converged",
+   "feasible": true,
+   "objective": -0.057621849733445724
+  }
+ ],
+ "best_incumbent_objective": {
+  "S1": -0.0418774333979773,
+  "S2": -0.02748755179431001,
+  "S3": -0.05762184977124565
+ },
+ "s4_deadline": {
+  "OSQP": {
+   "completed_in_budget": "22/25",
+   "p50_ms": 87.2,
+   "p99_ms": 1985.2
+  },
+  "Clarabel": {
+   "completed_in_budget": "25/25",
+   "p50_ms": 28.5,
+   "p99_ms": 30.7
+  },
+  "SCS": {
+   "completed_in_budget": "24/25",
+   "p50_ms": 36.8,
+   "p99_ms": 70.2
+  },
+  "PRISM-CPU": {
+   "completed_in_budget": "25/25",
+   "p50_ms": 7.4,
+   "p99_ms": 37.0
+  },
+  "PRISM-GPU": {
+   "completed_in_budget": "19/25",
+   "p50_ms": 316.5,
+   "p99_ms": 2816.3
+  }
+ },
+ "s5_batch": {
+  "OSQP": {
+   "total_wall_s": 45.34,
+   "completed": "195/200",
+   "p50_ms": 87.1,
+   "p99_ms": 2048.4
+  },
+  "Clarabel": {
+   "total_wall_s": 5.57,
+   "completed": "200/200",
+   "p50_ms": 27.4,
+   "p99_ms": 34.2
+  },
+  "SCS": {
+   "total_wall_s": 9.27,
+   "completed": "175/200",
+   "p50_ms": 38.4,
+   "p99_ms": 128.4
+  },
+  "PRISM-CPU": {
+   "total_wall_s": 1.81,
+   "completed": "200/200",
+   "p50_ms": 6.6,
+   "p99_ms": 42.2
+  },
+  "PRISM-GPU": {
+   "total_wall_s": 74.69,
+   "completed": "200/200",
+   "p50_ms": 282.7,
+   "p99_ms": 2849.2
+  }
+ },
+ "s6_cvxportfolio": {
+  "version": "1.5.1",
+  "wall_ms": 1857.2,
+  "status": "completed",
+  "lane": "cvxportfolio modeling layer, policy.execute on identical real returns"
+ },
+ "s7_scale_stress": {
+  "description": "real-calibrated extension: factor-loading rows resampled from the real cross-section, idiosyncratic variances and momentum tilts bootstrapped from the real distributions; gamma=0.005, caps 1%",
+  "results": [
+   {
+    "N": 1924,
+    "solver": "Clarabel",
+    "wall_ms": 483.7,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.04324771049517961
+   },
+   {
+    "N": 1924,
+    "solver": "OSQP",
+    "wall_ms": 796.7,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.04324771007737166
+   },
+   {
+    "N": 1924,
+    "solver": "PRISM-CPU",
+    "wall_ms": 58.0,
+    "status": "converged",
+    "feasible": true,
+    "objective": -0.043247710071457626
+   },
+   {
+    "N": 1924,
+    "solver": "PRISM-GPU",
+    "wall_ms": 1116.0,
+    "status": "converged",
+    "feasible": true,
+    "objective": -0.043247710078473806
+   },
+   {
+    "N": 4810,
+    "solver": "Clarabel",
+    "wall_ms": 2670.3,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.07865395832903735
+   },
+   {
+    "N": 4810,
+    "solver": "OSQP",
+    "wall_ms": 5747.1,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.07865395138146535
+   },
+   {
+    "N": 4810,
+    "solver": "PRISM-CPU",
+    "wall_ms": 51.6,
+    "status": "converged",
+    "feasible": true,
+    "objective": -0.07865395137886501
+   },
+   {
+    "N": 4810,
+    "solver": "PRISM-GPU",
+    "wall_ms": 652.0,
+    "status": "converged",
+    "feasible": true,
+    "objective": -0.07865395137886501
+   },
+   {
+    "N": 9620,
+    "solver": "Clarabel",
+    "wall_ms": 12526.5,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.10663307733127686
+   },
+   {
+    "N": 9620,
+    "solver": "OSQP",
+    "wall_ms": 25358.9,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.1066330610332882
+   },
+   {
+    "N": 9620,
+    "solver": "PRISM-CPU",
+    "wall_ms": 98.9,
+    "status": "converged",
+    "feasible": true,
+    "objective": -0.10663306103930571
+   },
+   {
+    "N": 9620,
+    "solver": "PRISM-GPU",
+    "wall_ms": 776.3,
+    "status": "converged",
+    "feasible": true,
+    "objective": -0.10663306102968542
+   },
+   {
+    "N": 24050,
+    "solver": "Clarabel",
+    "wall_ms": 198261.9,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.1281461291747186
+   },
+   {
+    "N": 24050,
+    "solver": "OSQP",
+    "wall_ms": 145046.7,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.1281461272190968
+   },
+   {
+    "N": 24050,
+    "solver": "PRISM-CPU",
+    "wall_ms": 3050.1,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.1281461257804368
+   },
+   {
+    "N": 24050,
+    "solver": "PRISM-GPU",
+    "wall_ms": 3058.7,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.1281461257804368
+   },
+   {
+    "N": 48100,
+    "solver": "Clarabel",
+    "wall_ms": 20269.8,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.12758600498682626,
+    "ceiling_s": 600.0
+   },
+   {
+    "N": 48100,
+    "solver": "OSQP",
+    "wall_ms": 489514.2,
+    "status": "optimal",
+    "feasible": true,
+    "objective": -0.12758599375531848,
+    "ceiling_s": 600.0
+   },
+   {
+    "N": 48100,
+    "solver": "PRISM-CPU",
+    "wall_ms": 2523.5,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.12758598702245386
+   },
+   {
+    "N": 48100,
+    "solver": "PRISM-GPU",
+    "wall_ms": 2938.6,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.12758598702245386
+   },
+   {
+    "N": 96200,
+    "solver": "PRISM-CPU",
+    "wall_ms": 5678.0,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.13036435842183358
+   },
+   {
+    "N": 96200,
+    "solver": "PRISM-GPU",
+    "wall_ms": 3329.1,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.13036435842183355
+   },
+   {
+    "N": 192400,
+    "solver": "PRISM-CPU",
+    "wall_ms": 14844.4,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.13048140122674548
+   },
+   {
+    "N": 192400,
+    "solver": "PRISM-GPU",
+    "wall_ms": 3506.6,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.13048140122674548
+   },
+   {
+    "N": 384800,
+    "solver": "PRISM-CPU",
+    "wall_ms": 33415.6,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.13029791447450104
+   },
+   {
+    "N": 384800,
+    "solver": "PRISM-GPU",
+    "wall_ms": 3795.1,
+    "status": "max_iter",
+    "feasible": true,
+    "objective": -0.13029791447450104
+   }
+  ]
+ },
+ "s7b_meta": {
+  "note": "S7 extended with N=24,050 round, same protocol"
+ },
+ "s7c_meta": {
+  "note": "N=48,100 round with declared 600 s incumbent ceiling; N=96,200 PRISM-only probe; position caps 0.5%/0.3% at the two sizes"
+ },
+ "s5b_batch_4810": {
+  "n_accounts": 50,
+  "n_universe": 4810,
+  "results": {
+   "Clarabel": {
+    "total_wall_s": 44.69,
+    "completed": "50/50",
+    "p50_ms": 895.1,
+    "p99_ms": 1092.2
+   },
+   "OSQP": {
+    "total_wall_s": 457.55,
+    "completed": "50/50",
+    "p50_ms": 8037.6,
+    "p99_ms": 25376.3
+   },
+   "PRISM-CPU": {
+    "total_wall_s": 7.51,
+    "completed": "50/50",
+    "p50_ms": 147.3,
+    "p99_ms": 182.2
+   },
+   "PRISM-GPU": {
+    "total_wall_s": 105.64,
+    "completed": "50/50",
+    "p50_ms": 2050.0,
+    "p99_ms": 2418.1
+   }
+  }
+ },
+ "s7d_meta": {
+  "note": "PRISM-only routing probes at N=192,400 and N=384,800; caps 0.15%/0.075%; incumbents not run, no incumbent claim"
+ }
+}

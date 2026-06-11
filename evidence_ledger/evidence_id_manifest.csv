@@ -1,0 +1,8 @@
+artifact_name,generated,use
+e1_multisolver_public_rows,2026-05-09,"multi-solver timings, versions, CPU/GPU timing frontier"
+e2_small_problem_agreement,2026-05-09,public FF30 small-problem study; comparator objective agreement
+e3_external_diagnostics_and_gap_checks,2026-05-09,"KKT-style checks, gap and covariance sensitivity, walk-forward, Monte Carlo"
+e4_deadline_completion_grid,2026-05-09,"deadline-completion grid, memory-class statement"
+e5_production_queue_500x10000,2026-05-09,production queue benchmark and constraint-burden curve
+e6_gpu_timing_lane_separation,2026-06-09,supplemental PRISM-GPU timing/status coverage; no objective-gap claims
+e7_hard_scenarios_real_data,2026-06-11,operationally constrained real-data scenario suite (481-asset S&P universe); CVXPortfolio reference row

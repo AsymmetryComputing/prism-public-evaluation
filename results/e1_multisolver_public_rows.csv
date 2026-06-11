@@ -1,0 +1,38 @@
+N,solver,wall_ms,status,feasible
+100,MOSEK,10231.8,optimal,True
+100,Clarabel,23.3,optimal,True
+100,OSQP,14.6,optimal,True
+100,SCS,14.2,optimal,True
+100,CPLEX,91.8,optimal,True
+500,MOSEK,3530.3,optimal,True
+500,Clarabel,355.6,optimal,True
+500,OSQP,329.1,optimal,True
+500,SCS,180.8,optimal,True
+500,CPLEX,110.6,license_constraint:Community Ed. limited to <1000 vars+constraints,False
+1000,MOSEK,9448.5,optimal,True
+1000,Clarabel,1184.9,optimal,True
+1000,OSQP,60412.7,user_limit (deadline),False
+1000,SCS,860.6,optimal,True
+1000,CPLEX,489.9,license_constraint,False
+2000,MOSEK,28458.2,optimal,True
+2000,Clarabel,6347.0,optimal,True
+2000,OSQP,24908.9,optimal,True
+2000,SCS,6330.4,optimal,True
+2000,CPLEX,2747.7,license_constraint,False
+5000,MOSEK,144794.6,optimal (deadline-exceeded),True
+5000,Clarabel,74896.8,optimal (deadline-exceeded),True
+5000,OSQP,101468.4,user_limit (deadline-exceeded),False
+100,PRISM-CPU,1.6,completed,True
+500,PRISM-CPU,7.5,completed,True
+1000,PRISM-CPU,38.9,completed,True
+2000,PRISM-CPU,1421.0,completed,True
+5000,PRISM-CPU,1804.8,completed,True
+10000,PRISM-CPU,228.3,completed,True
+25000,PRISM-CPU,1063.6,completed,True
+50000,PRISM-CPU,2187.9,completed,True
+100004,PRISM-CPU,2157.8,completed,True
+5000,PRISM-GPU,140.7,completed,True
+10000,PRISM-GPU,215.9,completed,True
+25000,PRISM-GPU,458.3,completed,True
+50000,PRISM-GPU,861.4,completed,True
+100004,PRISM-GPU,2161.2,completed,True

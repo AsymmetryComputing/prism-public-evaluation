@@ -1,0 +1,4 @@
+solver,p50_ms,p99_ms,total_wall_s,completed_accounts,missed_deadline_pct,audit_records,note
+PRISM-GPU,212.1,343.3,109.5,500,0.0,yes,
+PRISM-CPU,225.3,392.3,116.8,500,0.0,yes,
+OSQP,310000.0,310000.0,155000.0,4,99.2,partial,per-account times censored at recorded cap

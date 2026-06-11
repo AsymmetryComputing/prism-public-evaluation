@@ -1,0 +1,42 @@
+artifact: prism-public-evaluation
+version: 1.0.0
+generated: 2026-06-11
+paper: "PRISM: A CPU/GPU Portfolio Optimization Engine for Deadline-Bounded Institutional Rebalancing"
+author: Debdoot Ghosh, Asymmetry Computing
+boundary: >
+  Public evaluation boundary only. Returned weights, status codes, timings,
+  feasibility diagnostics, memory class, failure modes, and audit records.
+  Implementation details remain outside the public artifact.
+evidence:
+  - id: e1_multisolver_public_rows
+    generated: 2026-05-09
+    file: results/e1_multisolver_public_rows.csv
+  - id: e2_small_problem_agreement
+    generated: 2026-05-09
+    file: results/e2_small_problem_agreement.csv
+  - id: e3_external_diagnostics_and_gap_checks
+    generated: 2026-05-09
+    file: results/e3_external_diagnostics_and_gap_checks.csv
+  - id: e4_deadline_completion_grid
+    generated: 2026-05-09
+    file: results/e4_deadline_completion_grid.csv
+  - id: e5_production_queue_500x10000
+    generated: 2026-05-09
+    file: results/e5_production_queue_500x10000.csv
+  - id: e6_gpu_timing_lane_separation
+    generated: 2026-06-09
+    file: results/e6_gpu_timing_lane_separation.csv
+hardware:
+  cpu: Intel Xeon w5-3423 (12c/24t, 2.1 GHz base)
+  ram: 62.1 GB DDR5 ECC
+  gpu: NVIDIA RTX 4000 Ada Generation, 20 GB GDDR6
+  os: Windows 11 + WSL2 Ubuntu
+software:
+  python: 3.12.3
+  numpy: 2.3.5
+  scipy: 1.17.0
+  cupy: 13.6.0
+  cvxpy: 1.8.1
+  blas: OpenBLAS 0.3.30 (scipy-openblas64)
+  cuda: "12.9"
+  driver: "573.44"

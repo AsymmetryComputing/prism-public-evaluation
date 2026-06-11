@@ -1,0 +1,11 @@
+python==3.12.3
+numpy==2.3.5
+scipy==1.17.0
+cupy==13.6.0
+cvxpy==1.8.1
+osqp==1.1.0
+clarabel==0.11.1
+mosek==11.1.11
+openblas==0.3.30 (scipy-openblas64)
+cuda==12.9
+nvidia-driver==573.44

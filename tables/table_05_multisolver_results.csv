@@ -1,0 +1,6 @@
+N,PRISM-CPU_ms,PRISM-GPU_ms,PRISM-GPU_lane,Clarabel_ms,OSQP_ms,SCS_ms,MOSEK_ms,speedup_vs_fastest_published_ref
+100,1.6,98.3,e6 repeated,23.3,14.6,14.2,10231.8,8.9x
+500,7.5,94.3,e6 repeated,355.6,329.1,180.8,3530.3,24.1x
+1000,38.9,99.4,e6 repeated,1184.9,60412.7 (timeout),860.6,9448.5,22.1x
+2000,1421.0,112.2,e6 repeated,6347.0,24908.9,6330.4,28458.2,4.5x
+5000,1804.8,140.7,e1 full-call,74896.8 (late),101468.4 (timeout),not recorded,144794.6 (late),n/a (deadline-feasibility row)
