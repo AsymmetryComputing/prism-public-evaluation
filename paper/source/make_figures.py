@@ -224,9 +224,12 @@ def fig_lanes():
     # host-overhead bracket at N=5,000 (reported vs repeated wall)
     ax.annotate("", xy=(6200, 130.2), xytext=(6200, 133.9),
                 arrowprops=dict(arrowstyle="-", color=GRAYTXT, lw=0.7))
-    ax.text(6900, 132.0, "host overhead $\\leq$ 3.7 ms",
-            fontsize=FS - 2.2, color=GRAYTXT, family="sans-serif",
-            va="center")
+    ax.annotate("host overhead $\\leq$ 3.7 ms",
+                xy=(6350, 132.0), xytext=(8200, 111.0),
+                fontsize=FS - 2.2, color=GRAYTXT, family="sans-serif",
+                va="center", ha="left",
+                arrowprops=dict(arrowstyle="-|>", color=GRAYTXT, lw=0.6,
+                                shrinkA=2, shrinkB=1))
     # memory-class note
     ax.text(0.985, 0.04, "device memory: 5.6 kB \u2192 2.5 MB (Table 6)",
             transform=ax.transAxes, fontsize=FS - 2.2, color=GRAYTXT,
@@ -388,7 +391,7 @@ def fig_hard_scenarios():
         groups.append((f"routing probe\n(N={N:,})", s7row(N, "PRISM-GPU"),
                        s7row(N, "PRISM-CPU"), None, None))
 
-    width = 0.26
+    width = 0.31
     pitch = 1.34
     ys = [pitch * i for i in range(len(groups))][::-1]
     for gi, color, picker in [(0, BLUE, lambda g: g[1]),
@@ -400,9 +403,9 @@ def fig_hard_scenarios():
             vals.append(r["wall_ms"])
             v = r["wall_ms"]
             labs.append(f"{v/1000:.2f} s" if v >= 1000 else f"{v:.0f} ms")
-        axa.barh(pos, vals, height=width * 0.92, color=color, zorder=2)
+        axa.barh(pos, vals, height=width * 0.88, color=color, zorder=2)
         for p, v, lab in zip(pos, vals, labs):
-            axa.text(v * 1.25, p, lab, va="center", fontsize=FS - 2.4,
+            axa.text(v * 1.38, p, lab, va="center", fontsize=FS - 2.2,
                      color=color, family="sans-serif", fontweight="bold")
     pos, vals, labs = [], [], []
     for y, g in zip(ys, groups):
@@ -417,9 +420,9 @@ def fig_hard_scenarios():
         vals.append(v)
         labs.append((f"{v/1000:.1f} s" if v >= 1000 else f"{v:.0f} ms")
                     + f"  ({r['solver']})")
-    axa.barh(pos, vals, height=width * 0.92, color=SLATE, zorder=2)
+    axa.barh(pos, vals, height=width * 0.88, color=SLATE, zorder=2)
     for p, v, lab in zip(pos, vals, labs):
-        axa.text(v * 1.25, p, lab, va="center", fontsize=FS - 2.4,
+        axa.text(v * 1.38, p, lab, va="center", fontsize=FS - 2.2,
                  color=SLATE, family="sans-serif", fontweight="bold")
     axa.set_yticks(ys)
     axa.set_yticklabels([g[0] for g in groups], fontsize=FS - 1.8)
