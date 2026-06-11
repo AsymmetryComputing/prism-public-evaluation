@@ -681,7 +681,7 @@ auditing optimality can restrict attention to certified rows
 100 & \textbf{1.6} & 98.3\bfeas & 23.3 & 14.6 & 14.2 & 10{,}231.8 & 8.9$\times$ \\
 500 & \textbf{7.5} & 94.3\bfeas & 355.6 & 329.1 & 180.8 & 3{,}530.3 & 24.1$\times$ \\
 1{,}000 & \textbf{38.9} & 99.4\bfeas & 1{,}184.9 & 60{,}412.7\btimeout & 860.6 & 9{,}448.5 & 22.1$\times$ \\
-2{,}000 & 1{,}421.0 & \textbf{112.2}\bfeas & 6{,}347.0 & 24{,}908.9 & 6{,}330.4 & 28{,}458.2 & 4.5$\times$ \\
+2{,}000 & 1{,}421.0 & 112.2\bfeas & 6{,}347.0 & 24{,}908.9 & 6{,}330.4 & 28{,}458.2 & 4.5$\times$ \\
 5{,}000\textsuperscript{c} & 1{,}804.8\bfeas & \textbf{140.7}\bfeas & 74{,}896.8\blate & 101{,}468.4\btimeout & n.r. & 144{,}794.6\blate & n/a \\
 \bottomrule
 \end{tabularx}
@@ -709,10 +709,11 @@ inside the 60\,s lane, so no certified objective comparison is claimed.
 inverted log time axis: faster configurations appear higher. Filled markers
 are certified completions, open markers are timeout or deadline-exceeded
 returns, and the shaded band is the deadline-feasibility row at $N{=}5{,}000$.
-Because the PRISM stack routes work between its CPU and GPU configurations,
-the per-$N$ annotations report the better PRISM route against the fastest
-published completed reference row; PRISM-GPU cells derive from the \texttt{E6}
-reported-solve lane (Table~\ref{tab:multisolver}, note a).}
+The per-$N$ annotations report PRISM-CPU against the fastest published
+completed reference row in the same lane. The PRISM-GPU series is plotted for
+routing context only; its cells derive from the \texttt{E6} reported-solve
+lane (Table~\ref{tab:multisolver}, note a) and carry no speedup or
+objective-gap claim.}
 \label{fig:multisolver_timing}
 \end{figure}
 
@@ -720,13 +721,14 @@ The most important feature of Table~\ref{tab:multisolver} is the transition in
 what can be claimed. From $N{=}100$ to $N{=}2{,}000$, completed reference rows
 support direct speed and objective comparisons: PRISM-CPU is $4.5\times$ to
 $24.1\times$ faster than the fastest completed reference in the same lane.
-Because the stack routes each account to the better execution configuration,
-the routable-stack reading is stronger still: the better PRISM route is
-$8.9\times$, $24.1\times$, $22.1\times$, and $56.4\times$ faster at
-$N{=}100$ to $N{=}2{,}000$, where the $N{=}2{,}000$ route uses the GPU cell
-recorded in the \texttt{E6} lane. At $N{=}5{,}000$ the evidence changes
-character: the operational question becomes whether a usable portfolio is
-returned inside the deadline at all.
+No ratio is formed against the \texttt{E6} GPU cells in this table, because
+they sit in a different timing lane (note a); the lane-consistent
+demonstration of the routed stack's advantage is
+Section~\ref{sec:sanity}, where both PRISM routes and the incumbents are
+measured under one protocol and the routed stack reaches $47\times$ at
+$N{=}24{,}050$. At $N{=}5{,}000$ the evidence changes character: the
+operational question becomes whether a usable portfolio is returned inside
+the deadline at all.
 
 Two results from \texttt{E3\_external\_diagnostics\_and\_gap\_checks} bound
 the quality question on that row. Against the completed reference objective,
@@ -754,9 +756,10 @@ predictable latency is what a deadline budget needs. In this family and lane the
 near $N{\approx}1{,}200$; the crossover point is family- and lane-dependent,
 and Section~\ref{sec:sanity} locates it near $N{\approx}10^{5}$ for the
 warm transition family. Below the crossing the stack routes accounts to the
-CPU configuration; above it the GPU route wins, reaching $56.4\times$ against
-the fastest completed reference at $N{=}2{,}000$ and carrying the
-10,000-instrument production queue of Section~\ref{sec:production}. The
+CPU configuration; above it the GPU route wins, carrying the
+10,000-instrument production queue of Section~\ref{sec:production} and the
+same-lane scale rounds of Section~\ref{sec:sanity} ($47\times$ over the
+best incumbent at $N{=}24{,}050$). The
 routing decision is made on observable inputs (universe size), so it is
 auditable under the same boundary as every other measurement in this paper.
 

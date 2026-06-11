@@ -146,7 +146,7 @@ def fig_multisolver():
     routes = [(100, 1.6, "8.9x vs SCS", 1.65, 0.62),
               (500, 7.5, "24.1x vs SCS", 1.16, 0.40),
               (1000, 38.9, "22.1x vs SCS", 1.16, 0.40),
-              (2000, 112.2, "56.4x vs SCS", 1.16, 0.40)]
+              (2000, 1421.0, "4.5x vs SCS", 1.16, 0.40)]
     for n, y, lab, fx, fy in routes:
         ax.annotate(lab,
                     xy=(n, y), xytext=(n * fx, y * fy),
