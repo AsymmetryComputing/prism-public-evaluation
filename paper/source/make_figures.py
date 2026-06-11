@@ -214,7 +214,22 @@ def fig_lanes():
     ax.set_xlabel("Universe size $N$ (log scale)")
     ax.set_ylabel("Time (ms, log scale, inverted)")
     ax.set_title("PRISM-GPU timing-lane decomposition (E6)")
-    ax.legend(loc="lower right", frameon=True, fancybox=True,
+    # flat-floor band: the operational message of this lane
+    ax.axhspan(94, 134, color=BLUE, alpha=0.07, zorder=0)
+    ax.text(33, 88, "flat solve floor: 94\u2013130 ms while $N$ grows 167\u00d7",
+            fontsize=FS - 2, color=BLUE, family="sans-serif",
+            fontweight="bold", va="bottom")
+    # host-overhead bracket at N=5,000 (reported vs repeated wall)
+    ax.annotate("", xy=(6200, 130.2), xytext=(6200, 133.9),
+                arrowprops=dict(arrowstyle="-", color=GRAYTXT, lw=0.7))
+    ax.text(6900, 132.0, "host overhead $\\leq$ 3.7 ms",
+            fontsize=FS - 2.2, color=GRAYTXT, family="sans-serif",
+            va="center")
+    # memory-class note
+    ax.text(0.985, 0.04, "device memory: 5.6 kB \u2192 2.5 MB (Table 6)",
+            transform=ax.transAxes, fontsize=FS - 2.2, color=GRAYTXT,
+            family="sans-serif", ha="right", va="bottom", style="italic")
+    ax.legend(loc="center right", frameon=True, fancybox=True,
               edgecolor=LINE, facecolor="white", framealpha=0.95,
               fontsize=FS - 1.6, borderpad=0.7)
     ax.annotate("", xy=(0.945, 0.985), xycoords="axes fraction",
