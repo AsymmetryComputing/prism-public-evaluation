@@ -54,10 +54,10 @@ the same lane. In the production queue study, PRISM-GPU completes 500/500
 accounts over a 10,000-instrument universe in 109.5\,s within a declared
 25-minute operating window, with zero missed deadlines and an audit record for
 every solve; the recorded OSQP queue baseline completes 4/500. On an
-operationally constrained real-data suite (tax-aware transitions,
-restriction caps, turnover controls, batches), PRISM clears constrained
-solves $3.4\times$ to $47\times$ faster than the best completing incumbent
-at certified-equal objectives, and the GPU route widens to $8.8\times$ over
+operationally constrained real-data suite (tax-motivated transition
+penalties, restriction caps, turnover controls, batches), PRISM clears constrained
+solves $3.4\times$ to $126.7\times$ faster than the best completing
+incumbent at certified-equal objectives, and the GPU route widens to $8.8\times$ over
 the CPU route at $N{=}384{,}800$. Rows without a completed reference are
 reported as feasibility, timing, memory, and failure-status evidence.
 \end{abstractbox}
@@ -110,7 +110,7 @@ completed, or investment performance.
         benchmarks.
   \item The recorded OSQP queue baseline completes \textbf{4/500} accounts
         under the same protocol.
-  \item Real-data scenario suite: \textbf{3.4$\times$ to 47$\times$}
+  \item Real-data scenario suite: \textbf{3.4$\times$ to 126.7$\times$}
         faster than the best completing incumbent at certified-equal
         objectives; the GPU route widens to \textbf{8.8$\times$} over CPU
         at $N{=}384{,}800$.
@@ -140,9 +140,9 @@ The paper makes four contributions.
   \item \textbf{Production workflow and real-data scenario evidence.}
         The queue benchmark measures account completion, missed-deadline rate,
         p50/p99 timing, and audit-record coverage, and an operationally
-        constrained real-data suite stresses tax-aware transitions,
-        restriction caps, turnover controls, deadline budgets, batch
-        throughput, and scale; this is the form in which institutional
+        constrained real-data suite stresses tax-motivated transition
+        penalties, restriction caps, turnover controls, deadline budgets,
+        batch throughput, and scale; this is the form in which institutional
         rebalancing is actually operated.
 \end{enumerate}
 
@@ -361,10 +361,13 @@ recorded consistently.
 
 Two structural facts license the external checks used later. First, with
 $Q \succeq 0$ and convex $C$, $T_{\mathrm{tax}}$, and $R$,
-problem~\eqref{eq:public_problem} is convex, and the recorded instances
-satisfy Slater's condition (the feasible set has nonempty relative interior
-once $N w^{\max} > 1$), so strong duality holds and KKT residuals are a valid
-external optimality diagnostic \citep{boydvandenberghe2004}. Second, the
+problem~\eqref{eq:public_problem} is convex. The claim-bearing instances
+that feed the KKT diagnostics are budget-box programs (with L1 transition
+terms), for which Slater's condition holds whenever $N w^{\max} > 1$; richer
+constraint families would require exhibiting a strictly feasible point per
+instance before the same diagnostic applies. Under that condition strong
+duality holds and KKT residuals are a valid external optimality diagnostic
+\citep{boydvandenberghe2004}. Second, the
 benchmark instances carry factor-structured risk, so evaluating the public
 objective or its gradient costs $O(Nk)$ operations with $k \ll N$: instance
 data grow linearly in $N$, and the benchmark therefore stresses systems
@@ -731,8 +734,10 @@ operational question becomes whether a usable portfolio is returned inside
 the deadline at all.
 
 Two results from \texttt{E3\_external\_diagnostics\_and\_gap\_checks} bound
-the quality question on that row. Against the completed reference objective,
-PRISM reports a 2.44\% gap in 1.8\,s on the same study family. A
+the quality question on that row. No \emph{published} reference completed
+inside the lane, but the anonymized commercial reference of
+Section~\ref{sec:protocol} did complete on the same study family, and
+against its objective PRISM reports a 2.44\% gap in 1.8\,s. A
 covariance-sensitivity check reduces that gap to 0.61\% under Ledoit--Wolf
 shrinkage (0.84\% under OAS), indicating that much of the gap tracks the
 conditioning of the public risk input rather than a fixed engine deficit.
@@ -752,10 +757,11 @@ Second, PRISM-GPU is nearly flat: its reported solve interval moves only from
 98\,ms to 130\,ms while $N$ grows $50\times$, so its cost is dominated by a
 fixed call floor rather than by problem size. A flat profile is valuable for a
 different reason than raw speed: it makes per-account latency predictable, and
-predictable latency is what a deadline budget needs. In this family and lane the two curves cross
-near $N{\approx}1{,}200$; the crossover point is family- and lane-dependent,
-and Section~\ref{sec:sanity} locates it near $N{\approx}10^{5}$ for the
-warm transition family. Below the crossing the stack routes accounts to the
+predictable latency is what a deadline budget needs. In this display the two series cross near $N{\approx}1{,}200$; the
+crossing is indicative only, because the GPU cells derive from the
+\texttt{E6} reported-solve lane rather than the comparators' full-call lane.
+The measured same-lane crossover is located in Section~\ref{sec:sanity},
+near $N{\approx}10^{5}$ for the warm transition family. Below the crossing the stack routes accounts to the
 CPU configuration; above it the GPU route wins, carrying the
 10,000-instrument production queue of Section~\ref{sec:production} and the
 same-lane scale rounds of Section~\ref{sec:sanity} ($47\times$ over the
@@ -837,8 +843,11 @@ quantity a platform compares against its book size.
 
 The external diagnostic pack
 \texttt{E3\_external\_diagnostics\_and\_gap\_checks} records feasibility and
-KKT-style checks on returned weight vectors. Every value in
-Table~\ref{tab:kkt} is computable from public inputs and returned weights.
+KKT-style checks on returned weight vectors. The feasibility columns of
+Table~\ref{tab:kkt} are computable from public inputs and returned weights
+alone; the stationarity- and complementarity-style columns additionally use
+the archived multiplier (certificate) data described in
+Section~\ref{sec:setting}.
 
 \begin{table}[H]
 \centering
@@ -881,10 +890,11 @@ The diagnostics in Table~\ref{tab:kkt} support external feasibility and
 numerical-consistency claims under the declared gates. They do not establish
 certified large-scale optimality. The design follows artifact-review practice:
 a result is credible when an independent reader can re-derive it from the
-published inputs and outputs alone \citep{acmartifact2020}. Because every
-residual here is a function of public inputs and returned weights, any reader
-with the archived data can recompute the entire table without access to PRISM
-internals; this permits an IP-preserving but externally checkable evaluation.
+published artifact \citep{acmartifact2020}. Because every residual here is a
+function of public inputs, returned weights, and archived certificate data,
+any reader with the artifact can recompute the entire table without access to
+PRISM internals; this permits an IP-preserving but externally checkable
+evaluation.
 The same property is what a compliance reviewer needs after a production run:
 the checks do not require the solver's cooperation to audit its output.
 
@@ -1022,8 +1032,14 @@ missed-deadline rate, tail latency, and an audit trail per decision.
 %% ============================================================
 
 This section stresses the operational surface of the benchmark on real market
-data: tax-aware transitions, account-restriction caps, factor and turnover
-controls, deadline-bounded solving, and batch throughput. The universe is the
+data: tax-motivated transition penalties, account-restriction caps, factor and
+turnover controls, deadline-bounded solving, and batch throughput. The L1
+transition penalty is the standard public proxy for tax- and
+trading-cost-aware transitions \citep{moehle2021taxaware,fan2025costaware};
+discrete tax-lot, wash-sale, and lot-selection logic is outside this
+continuous benchmark (Section~\ref{sec:setting}). The universe is built from
+current index membership, so the survivorship caveat of
+Section~\ref{sec:validity} applies. The universe is the
 current S\&P 500 membership with continuous 2019--2025 history (481 names,
 1{,}707 trading days of daily adjusted closes), with a $k{=}20$ factor model
 estimated from the real returns and drifted real holdings as starting
@@ -1040,11 +1056,15 @@ with factor loadings $B \in \R^{N\times 20}$ and idiosyncratic variances
 $d$ estimated from the real returns, and the objective is recomputed
 externally on every returned weight vector $\widehat{\bw}$. Quality is
 scored by the certified-relative gap
-$\Delta = \big(f(\widehat{\bw}_{\mathrm{PRISM}}) -
-f(\widehat{\bw}_{\mathrm{inc}}^{\ast})\big)/|f(\widehat{\bw}_{\mathrm{inc}}^{\ast})|$,
-where $\widehat{\bw}_{\mathrm{inc}}^{\ast}$ is the best certified incumbent
-solution of the same instance. The incumbent lane is strict in PRISM's
-disfavor: cvxpy models are built once and parameter-updated, and only the
+\[
+  \Delta \;=\;
+  \frac{f(\widehat{\bw}_{\mathrm{PRISM}})
+        - f\big(\widehat{\bw}^{\,\star}_{\mathrm{inc}}\big)}
+       {\big|f\big(\widehat{\bw}^{\,\star}_{\mathrm{inc}}\big)\big|},
+\]
+where $\widehat{\bw}^{\,\star}_{\mathrm{inc}}$ is the best certified
+incumbent solution of the same instance. The incumbent lane is strict in PRISM's
+disfavor: CVXPY models are built once and parameter-updated, and only the
 solver call is timed, so incumbent times exclude model construction. Every
 run is scripted with fixed seeds, the price cache is archived with the
 artifact, and the suite is rerunnable end to end from the public repository.
@@ -1064,7 +1084,7 @@ versus the best certified incumbent objective.}
 \hdrrow\hcell{Scenario} & \hcell{Operational stress} & \hcell{PRISM-CPU} &
 \hcell{PRISM-GPU} & \hcell{Best incumbent} & \hcell{OSQP} & \hcell{Gap\textsuperscript{a}} \\
 \midrule
-S1 & tax-aware transition ($\gamma{=}0.005$, drifted holdings, 3\% caps) &
+S1 & transition-penalty stress ($\gamma{=}0.005$, drifted holdings, 3\% caps) &
 \textbf{7.7} & 257.9 & 39.3 (Clarabel) & 69.2 & 0.00\% \\
 S2 & account-restriction caps (1.2\% position limit) &
 \textbf{7.1} & 258.2 & 24.3 (Clarabel) & 79.9 & 0.00\% \\
@@ -1162,10 +1182,11 @@ apply.
 
 \begin{table}[!htb]
 \centering
-\caption{Scale stress on the real-calibrated extension, evidence
-\texttt{E7}/S7. Solver-call wall-clock (ms); identical public objective;
-PRISM objectives match the certified incumbent to at least seven decimal
-places at every size.}
+\caption{Scale stress on the real-calibrated extension: the S7 study
+recorded inside \texttt{E7\_hard\_scenarios\_real\_data}. Solver-call
+wall-clock (ms); identical public objective. Where an incumbent ran, PRISM
+objectives match the certified incumbent to at least seven decimal places;
+the routing-probe rows carry no incumbent comparison.}
 \label{tab:e7scale}
 \small
 \begin{tabular}{r r r r r r r}
@@ -1224,8 +1245,12 @@ concession.
 The evidence package also retains walk-forward and Monte Carlo pipeline
 checks (\texttt{E3}): repeated portfolio generation over 131 real-data
 survivors and 1{,}000 randomized universes, used to verify feasible, stable,
-turnover-respecting outputs across rebalances. They are workflow checks under
-the claim contract and carry no performance claim.
+turnover-respecting outputs across rebalances. The recorded pass criteria
+are explicit: every rebalance must return weights that satisfy the
+Section~\ref{sec:protocol} feasibility gates and the declared turnover cap,
+across all 300 walk-forward rebalances and all 1{,}000 Monte Carlo universes;
+both checks pass in \texttt{E3}. They are workflow checks under the claim
+contract and carry no performance claim.
 
 %% ============================================================
 \section{Evidence Ledger, Artifact Policy, and Claim Notes}
@@ -1309,7 +1334,9 @@ methodology used for gap eligibility. PRISM timing rows are not recorded in
 \begin{reprobox}[title={Artifact note}]
 Public claim-bearing artifacts, sanitized result tables, environment metadata,
 and figure-generation scripts are archived at
-\href{https://github.com/AsymmetryComputing/prism-public-evaluation}{\texttt{AsymmetryComputing/prism-public-evaluation}}.
+\href{https://github.com/AsymmetryComputing/prism-public-evaluation}{\texttt{github.com/AsymmetryComputing/prism-public-evaluation}}
+(release \texttt{v1.0.0}); a DOI-stamped archival snapshot of the same
+release accompanies the submission record.
 PRISM implementation code is not part of the public artifact; external checks
 on returned weights are reproducible from the archived data.
 \end{reprobox}
@@ -1326,7 +1353,7 @@ on returned weights are reproducible from the archived data.
 \texttt{README.md}, \texttt{MANIFEST.yml}, \texttt{CITATION.cff}, \texttt{LICENSE} & Index, artifact manifest, citation metadata, license. \\
 \texttt{environment/} & Hardware/runtime disclosure and package versions. \\
 \texttt{data\_sanitized/} & Benchmark input manifest; no client data, no engine state. \\
-\texttt{results/} & One sanitized CSV per evidence artifact (\texttt{E1}--\texttt{E6}). \\
+\texttt{results/} & One sanitized CSV per evidence artifact (\texttt{E1}--\texttt{E7}). \\
 \texttt{figures/}, \texttt{tables/} & Published figures (vector) and machine-readable tables. \\
 \texttt{validation/} & Public residual and feasibility-gate scripts; table reproduction script. \\
 \texttt{evidence\_ledger/} & Claim-to-evidence ledger, artifact manifest, artifact policy. \\
@@ -1395,24 +1422,30 @@ interface, not a complete model of every mandate. Discrete lot rules,
 market-impact models, client-specific tax instructions, and compliance
 overlays require separate protocol rows.
 
-\textbf{Harness asymmetry.} Comparator rows include CVXPY model construction
-inside the timed call; PRISM rows are measured at PRISM's public solver-call
-boundary. The completed-row speedups (up to $24.1\times$) and the queue
+\textbf{Harness asymmetry.} Two disclosed comparator lanes are used: the
+\texttt{E1} rows include CVXPY model construction inside the timed call,
+while the \texttt{E7} suite pre-builds parametrized CVXPY models and times
+only the solver call (the stricter lane for PRISM). PRISM rows are measured
+at PRISM's public solver-call boundary in both. The completed-row speedups (up to $24.1\times$) and the queue
 outcome (500/500 versus 4/500) far exceed plausible modeling-layer overhead;
 millisecond-level differences between harness paths should not be over-read.
 
 \textbf{Objective-gap eligibility.} Gaps are shown only where a reference
 solver completed on the same public objective. The gap reference is an
 anonymized commercial solver; it contributes completed reference objectives
-only.
+only. The anonymization is a license constraint and a recognized
+reproducibility cost: independent verification of those gaps requires
+re-running a licensed commercial solver on the archived instances.
 
 \textbf{Reference incompletion.} A timeout or missing reference is evidence
 that the reference row did not complete inside the operating lane under the
 recorded protocol, nothing more.
 
 \textbf{Hardware specificity.} Timings are specific to the recorded
-workstation. New hardware or solver versions require a fresh disclosure table
-and new evidence artifacts.
+workstation and to the disclosed comparator versions; newer point releases of
+the comparators may exist, and rows bind to the recorded versions. New
+hardware or solver versions require a fresh disclosure table and new evidence
+artifacts.
 
 \textbf{Scenario-suite interpretation.} The Section~\ref{sec:sanity} suite
 uses real prices and real-return factor models, with account personalization
@@ -1442,9 +1475,9 @@ diagnostics, memory class, failure rates, queue completion, and auditability.
 On the recorded evidence, PRISM-CPU is $4.5\times$ to $24.1\times$ faster than
 the fastest completed reference rows at $N{=}100$ to $N{=}2{,}000$ and returns
 externally feasible portfolios with bounded reference gaps where eligibility
-holds. On the real-data scenario suite, PRISM clears tax-aware,
+holds. On the real-data scenario suite, PRISM clears transition-penalized,
 restriction-capped, turnover-controlled, and scale-stressed solves
-$3.4\times$ to $47\times$ faster than the best completing incumbent at
+$3.4\times$ to $126.7\times$ faster than the best completing incumbent at
 certified-equal objectives, completes the 200-account batch in 1.81\,s with
 every account passing the external gates, and the GPU route widens to
 $8.8\times$ over the CPU route at $N{=}384{,}800$. The headline result is systems-level:

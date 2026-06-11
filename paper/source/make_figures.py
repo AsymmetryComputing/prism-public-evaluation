@@ -157,7 +157,9 @@ def fig_multisolver():
 
     # direct labels
     dlabel(ax, 5000, 1804.8, "PRISM-CPU", NAVY, dy=1.9)
-    dlabel(ax, 5000, 130.2, "PRISM-GPU", BLUE, dy=1.0)
+    ax.text(5000 * 1.12, 130.2, "PRISM-GPU\n(E6 reported-solve lane)",
+            color=BLUE, fontsize=FS - 1.8, ha="left", va="center",
+            family="sans-serif", fontweight="bold")
     dlabel(ax, 5000, 74896.8, "Clarabel", SLATE, dy=0.66)
     dlabel(ax, 5000, 101468.4, "OSQP", AMBER, dy=1.04)
     dlabel(ax, 1000, 860.6, "SCS", VIOLET, dx=0.58, dy=1.0)
@@ -168,7 +170,7 @@ def fig_multisolver():
     ax.set_xlim(80, 33000)
     ax.set_ylim(9e5, 0.45)   # inverted: faster sits on top
     ax.set_xlabel("Universe size $N$ (log scale)")
-    ax.set_ylabel("Full-call wall-clock time (ms, log scale, inverted)")
+    ax.set_ylabel("Time (ms, log scale, inverted; lane per series)")
     ax.annotate("", xy=(0.025, 0.995), xycoords="axes fraction",
                 xytext=(0.025, 0.875), textcoords="axes fraction",
                 arrowprops=dict(arrowstyle="-|>", color=GRAYTXT, lw=0.9))
@@ -396,12 +398,8 @@ def fig_hard_scenarios():
         for g in groups:
             r = picker(g)
             vals.append(r["wall_ms"])
-            gap = ""
-            if r.get("objective") is not None and g[4]:
-                d = 100 * (r["objective"] - g[4]) / abs(g[4])
-                gap = f"  gap {d:+.2f}%"
             v = r["wall_ms"]
-            labs.append((f"{v/1000:.2f} s" if v >= 1000 else f"{v:.0f} ms") + gap)
+            labs.append(f"{v/1000:.2f} s" if v >= 1000 else f"{v:.0f} ms")
         axa.barh(pos, vals, height=width * 0.92, color=color, zorder=2)
         for p, v, lab in zip(pos, vals, labs):
             axa.text(v * 1.25, p, lab, va="center", fontsize=FS - 2.4,
@@ -432,6 +430,10 @@ def fig_hard_scenarios():
                   loc="left", fontsize=FS)
     axa.grid(axis="y", visible=False)
     faster_cue(axa, "left", "faster", x=0.015, y0=0.965, span=0.085)
+    axa.text(0.985, 0.965, "all PRISM gaps vs certified incumbent: +0.00%",
+             transform=axa.transAxes, ha="right", va="center",
+             fontsize=FS - 2, color=GRAYTXT, family="sans-serif",
+             style="italic")
     leg = [Line2D([], [], color=c, lw=4, label=l)
            for l, c in [("PRISM-GPU", BLUE), ("PRISM-CPU", NAVY),
                         ("best incumbent", SLATE)]]
@@ -500,6 +502,8 @@ def fig_claim_matrix():
 
     fig, ax = plt.subplots(figsize=(6.6, 3.6))
     n = len(claims)
+    glyph = {"timing": "T", "feasibility": "F", "gap": "G", "queue": "Q",
+             "diagnostic": "D", "agreement": "A", "provenance": "P"}
     for i, (label, cat, used) in enumerate(claims):
         y = n - 1 - i
         ax.text(-0.62, y, label, ha="right", va="center", fontsize=FS - 1.5)
@@ -508,6 +512,9 @@ def fig_claim_matrix():
                 ax.add_patch(Rectangle((j - 0.32, y - 0.32), 0.64, 0.64,
                                        facecolor=cat_color[cat],
                                        edgecolor="none", alpha=0.92))
+                ax.text(j, y, glyph[cat], ha="center", va="center",
+                        fontsize=FS - 2.2, color="white",
+                        family="sans-serif", fontweight="bold")
             else:
                 ax.add_patch(Rectangle((j - 0.32, y - 0.32), 0.64, 0.64,
                                        facecolor=FILL, edgecolor="none"))
@@ -516,8 +523,8 @@ def fig_claim_matrix():
                 fontsize=FS - 1, family="monospace", color=GRAYTXT)
     handles = [Rectangle((0, 0), 1, 1, facecolor=c, edgecolor="none")
                for c in [NAVY, TEAL, VIOLET, BLUE, SLATE, "#94A3B8", AMBER]]
-    labels = ["timing", "feasibility", "objective gap", "queue",
-              "diagnostic", "agreement", "provenance"]
+    labels = ["T timing", "F feasibility", "G objective gap", "Q queue",
+              "D diagnostic", "A agreement", "P provenance"]
     ax.legend(handles, labels, frameon=False, loc="upper center",
               bbox_to_anchor=(0.5, -0.02), ncol=4, fontsize=FS - 2.2,
               handlelength=1.0, handleheight=1.0, columnspacing=1.2)
