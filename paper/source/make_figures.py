@@ -222,10 +222,8 @@ def fig_lanes():
             fontsize=FS - 2, color=BLUE, family="sans-serif",
             fontweight="bold", va="bottom")
     # host-overhead bracket at N=5,000 (reported vs repeated wall)
-    ax.annotate("", xy=(6200, 130.2), xytext=(6200, 133.9),
-                arrowprops=dict(arrowstyle="-", color=GRAYTXT, lw=0.7))
     ax.annotate("host overhead $\\leq$ 3.7 ms",
-                xy=(6350, 132.0), xytext=(8200, 111.0),
+                xy=(5400, 132.0), xytext=(8200, 111.0),
                 fontsize=FS - 2.2, color=GRAYTXT, family="sans-serif",
                 va="center", ha="left",
                 arrowprops=dict(arrowstyle="-|>", color=GRAYTXT, lw=0.6,
