@@ -761,10 +761,11 @@ predictable latency is what a deadline budget needs. In this display the two ser
 crossing is indicative only, because the GPU cells derive from the
 \texttt{E6} reported-solve lane rather than the comparators' full-call lane.
 The measured same-lane crossover is located in Section~\ref{sec:sanity},
-near $N{\approx}10^{5}$ for the warm transition family. Below the crossing the stack routes accounts to the
+between $N{=}48{,}100$ and $N{=}96{,}200$ for the warm transition family
+(Table~\ref{tab:e7scale}). Below the crossing the stack routes accounts to the
 CPU configuration; above it the GPU route wins, carrying the
 10,000-instrument production queue of Section~\ref{sec:production} and the
-same-lane scale rounds of Section~\ref{sec:sanity} ($47\times$ over the
+same-lane scale rounds of Section~\ref{sec:sanity} ($47.6\times$ over the
 best incumbent at $N{=}24{,}050$). The
 routing decision is made on observable inputs (universe size), so it is
 auditable under the same boundary as every other measurement in this paper.
@@ -1226,10 +1227,10 @@ at scale: at $N{=}24{,}050$ the best incumbent needs 145\,s for a single
 account, a fifth of the entire 25-minute operating window of
 Section~\ref{sec:production}, and at $N{=}48{,}100$ OSQP needs 489.5\,s
 while Clarabel recovers to 20.3\,s. Both PRISM routes stay between 2.5\,s
-and 3.1\,s across these sizes: a $47\times$ advantage at $N{=}24{,}050$ and
+and 3.1\,s across these sizes: a $47.6\times$ advantage at $N{=}24{,}050$ and
 $8.0\times$/$6.9\times$ (CPU/GPU) at $N{=}48{,}100$. The GPU route crosses
 the best incumbent near $N{\approx}4{,}800$ ($16.1\times$ at $N{=}9{,}620$)
-and crosses its own CPU sibling near $N{\approx}10^{5}$. From there the
+and crosses its own CPU sibling between $N{=}48{,}100$ and $N{=}96{,}200$. From there the
 device margin widens with width: $1.7\times$ at $N{=}96{,}200$,
 $4.2\times$ at $N{=}192{,}400$, and $8.8\times$ at $N{=}384{,}800$, where
 the GPU route returns the identical portfolio in 3.8\,s against 33.4\,s on
